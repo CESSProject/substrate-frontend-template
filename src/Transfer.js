@@ -1,28 +1,28 @@
-import React, { useState } from 'react'
-import { Form, Input, Grid, Label, Icon, Dropdown } from 'semantic-ui-react'
-import { TxButton } from './substrate-lib/components'
-import { useSubstrateState } from './substrate-lib'
+import React, { useState } from "react";
+import { Form, Input, Grid, Label, Icon, Dropdown } from "semantic-ui-react";
+import { TxButton } from "./substrate-lib/components";
+import { useSubstrateState } from "./substrate-lib";
 
 export default function Main(props) {
-  const [status, setStatus] = useState(null)
-  const [formState, setFormState] = useState({ addressTo: '', amount: 0 })
+  const [status, setStatus] = useState(null);
+  const [formState, setFormState] = useState({ addressTo: "", amount: 0 });
 
   const onChange = (_, data) =>
-    setFormState(prev => ({ ...prev, [data.state]: data.value }))
+    setFormState((prev) => ({ ...prev, [data.state]: data.value }));
 
-  const { addressTo, amount } = formState
+  const { addressTo, amount } = formState;
 
-  const { keyring } = useSubstrateState()
-  const accounts = keyring.getPairs()
+  const { keyring } = useSubstrateState();
+  const accounts = keyring.getPairs();
 
-  const availableAccounts = []
-  accounts.map(account => {
+  const availableAccounts = [];
+  accounts.map((account) => {
     return availableAccounts.push({
       key: account.meta.name,
       text: account.meta.name,
       value: account.address,
-    })
-  })
+    });
+  });
 
   return (
     <Grid.Column width={8}>
@@ -35,7 +35,7 @@ export default function Main(props) {
           <Label
             basic
             color="teal"
-            style={{ marginLeft: 0, marginTop: '.5em' }}
+            style={{ marginLeft: 0, marginTop: ".5em" }}
           >
             <Icon name="hand point right" />
             Transfer more than the existential amount for account with 0 balance
@@ -74,21 +74,21 @@ export default function Main(props) {
             onChange={onChange}
           />
         </Form.Field>
-        <Form.Field style={{ textAlign: 'center' }}>
+        <Form.Field style={{ textAlign: "center" }}>
           <TxButton
             label="Submit"
             type="SIGNED-TX"
             setStatus={setStatus}
             attrs={{
-              palletRpc: 'balances',
-              callable: 'transfer',
+              palletRpc: "balances",
+              callable: "transfer",
               inputParams: [addressTo, amount],
               paramFields: [true, true],
             }}
           />
         </Form.Field>
-        <div style={{ overflowWrap: 'break-word' }}>{status}</div>
+        <div style={{ overflowWrap: "break-word" }}>{status}</div>
       </Form>
     </Grid.Column>
-  )
+  );
 }
