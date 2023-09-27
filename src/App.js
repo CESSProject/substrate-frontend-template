@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React, { useRef } from "react";
 import {
   Container,
   Dimmer,
@@ -25,6 +25,7 @@ import Upgrade from "./Upgrade";
 
 function Main() {
   const { apiState, apiError, keyringState } = useSubstrateState();
+  const contextRef = useRef(null);
 
   const loader = (text) => (
     <Dimmer active>
@@ -54,8 +55,6 @@ function Main() {
       "Loading accounts (please review any extension's authorization)",
     );
   }
-
-  const contextRef = createRef();
 
   return (
     <div ref={contextRef}>
