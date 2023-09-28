@@ -57,7 +57,10 @@ function Main(props) {
       unsub && unsub();
       unsub = null;
     };
-  }, [api.query.system, eventFeed]);
+    // We disable exhaustive-deps check because we read and write eventFeed (calling `setEventFeed()`) in the function.
+    // If we add eventFeed in the dependency list, an inifinite loop will occur.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api.query.system]);
 
   const { feedMaxHeight = 250 } = props;
 
