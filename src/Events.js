@@ -3,54 +3,61 @@ import { Feed, Grid, Button } from "semantic-ui-react";
 
 import { useSubstrateState } from "./substrate-lib";
 
-// Events to be filtered from feed
-const FILTERED_EVENTS = [
-  'system:ExtrinsicSuccess::(phase={"applyExtrinsic":0})',
-];
+// Events to be filtered out from the event feed
+const FILTERED_EVENTS = ["system:ExtrinsicSuccess"];
 
 const eventName = (ev) => `${ev.section}:${ev.method}`;
 const eventParams = (ev) => JSON.stringify(ev.data);
 
 function Main(props) {
   const { api } = useSubstrateState();
-  const [eventFeed, setEventFeed] = useState([]);
+  const [eventFeed, setEventFeed] = useState([[], new Set()]);
 
   useEffect(() => {
     let unsub = null;
-    let keyNum = 0;
+
     const allEvents = async () => {
       unsub = await api.query.system.events((events) => {
-        // loop through the Vec<EventRecord>
-        events.forEach((record) => {
-          // extract the phase, event and the event types
-          const { event, phase } = record;
+        const feed = events
+          .map((record) => {
+            // extract the phase, event and the event types
+            const evHuman = record.event.toHuman();
+            const evName = eventName(evHuman);
+            const evParams = eventParams(evHuman);
+            return { evName, evParams };
+          })
+          .filter(({ evName }) => !FILTERED_EVENTS.includes(evName))
+          .map(({ evName, evParams }, idx) => ({
+            key: `${eventFeed[0].length + idx}-${evName}`,
+            icon: "bell",
+            summary: evName,
+            content: evParams,
+          }));
 
-          // show what we are busy with
-          const evHuman = event.toHuman();
-          const evName = eventName(evHuman);
-          const evParams = eventParams(evHuman);
-          const evNamePhase = `${evName}::(phase=${phase.toString()})`;
+        if (feed.length === 0) return;
 
-          if (FILTERED_EVENTS.includes(evNamePhase)) return;
+        setEventFeed(([prevFeed, prevSet]) => {
+          // Because React fires useEffect() twice in strict mode, we need to ensure the events
+          // haven't been added to the event feed before.
+          const newFeed = feed.filter((oneFeed) => !prevSet.has(oneFeed.key));
+          if (newFeed.length === 0) return [prevFeed, prevSet];
 
-          setEventFeed((e) => [
-            {
-              key: keyNum,
-              icon: "bell",
-              summary: evName,
-              content: evParams,
-            },
-            ...e,
-          ]);
-
-          keyNum += 1;
+          // Construct the newSet
+          const newSet = new Set(prevSet);
+          newFeed.forEach((oneFeed) => newSet.add(oneFeed.key));
+          return [[...newFeed, ...prevFeed], newSet];
         });
       });
     };
 
-    allEvents();
-    return () => unsub && unsub();
-  }, [api.query.system]);
+    // We only want to call the event subscription fn if it hasn't previously subscribed.
+    !unsub && allEvents();
+
+    return () => {
+      unsub && unsub();
+      unsub = null;
+    };
+  }, [api.query.system, eventFeed]);
 
   const { feedMaxHeight = 250 } = props;
 
@@ -64,11 +71,11 @@ function Main(props) {
         color="grey"
         floated="right"
         icon="erase"
-        onClick={(_) => setEventFeed([])}
+        onClick={(_) => setEventFeed([[], new Set()])}
       />
       <Feed
         style={{ clear: "both", overflow: "auto", maxHeight: feedMaxHeight }}
-        events={eventFeed}
+        events={eventFeed[0]}
       />
     </Grid.Column>
   );
