@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Grid, Button, Label } from "semantic-ui-react";
+import { Table, Segment, Header, Button, Label } from "semantic-ui-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSubstrateState } from "./substrate-lib";
 
@@ -32,8 +32,8 @@ export default function Main(props) {
   }, [api, keyring, setBalances]);
 
   return (
-    <Grid.Column>
-      <h1>Balances</h1>
+    <Segment style={{ overflowWrap: "break-word", overflowX: "auto" }}>
+      <Header size="large">Balances</Header>
       {accounts.length === 0 ? (
         <Label basic color="yellow">
           No accounts to be shown
@@ -82,6 +82,6 @@ export default function Main(props) {
           </Table.Body>
         </Table>
       )}
-    </Grid.Column>
+    </Segment>
   );
 }

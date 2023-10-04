@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input, Grid, Label, Icon, Dropdown } from "semantic-ui-react";
+import {
+  Form,
+  Input,
+  Segment,
+  Header,
+  Label,
+  Icon,
+  Dropdown,
+} from "semantic-ui-react";
 import { TxButton } from "./substrate-lib/components";
 import { useSubstrateState } from "./substrate-lib";
 
@@ -25,8 +33,8 @@ export default function Main(props) {
   });
 
   return (
-    <Grid.Column width={8}>
-      <h1>Transfer</h1>
+    <Segment style={{ overflowWrap: "break-word", overflowX: "auto" }}>
+      <Header size="large">Transfer</Header>
       <Form>
         <Form.Field>
           <Label basic color="teal">
@@ -89,6 +97,6 @@ export default function Main(props) {
         </Form.Field>
         <div style={{ overflowWrap: "break-word" }}>{status}</div>
       </Form>
-    </Grid.Column>
+    </Segment>
   );
 }

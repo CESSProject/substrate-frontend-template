@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Feed, Grid, Button, Label, Form } from "semantic-ui-react";
+import { Header, Feed, Segment, Button, Label } from "semantic-ui-react";
 
 import { useSubstrateState } from "./substrate-lib";
 
@@ -26,14 +26,17 @@ function Main(props) {
           .map((record) => {
             // extract the phase, event and the event types
             const evHuman = record.event.toHuman();
-            const evNameNBlock = `${eventName(evHuman)} (block: ${currBlockNum})`;
+            const evNameNBlock = `${eventName(
+              evHuman,
+            )} (block: ${currBlockNum})`;
             const evParams = eventParams(evHuman);
             return { evNameNBlock, evParams };
           })
-          .filter(({ evNameNBlock }) =>
-            !FILTERED_EVENTS.some((toFilterE) =>
-              evNameNBlock.startsWith(toFilterE),
-            ),
+          .filter(
+            ({ evNameNBlock }) =>
+              !FILTERED_EVENTS.some((toFilterE) =>
+                evNameNBlock.startsWith(toFilterE),
+              ),
           )
           .map(({ evNameNBlock, evParams }) => ({
             key: evNameNBlock,
@@ -86,30 +89,29 @@ function Main(props) {
   const { feedMaxHeight = 250 } = props;
 
   return (
-    <Grid.Column width={8}>
-      <h1>Events
-        <Button
-          basic
-          circular
-          size="mini"
-          color="grey"
-          floated="right"
-          icon="erase"
-          onClick={(_) => setEventFeed([[], new Set()])}
-        />
-      </h1>
-      <Form>
-        <Form.Field>
-          <Label basic color="teal">
-            Block number maybe off by 1
-          </Label>
-        </Form.Field>
-      </Form>
+    <Segment style={{ overflowWrap: "break-word", overflowX: "auto" }}>
+      <Header size="large" floated="left">
+        Events
+      </Header>
+      <Button
+        basic
+        circular
+        size="mini"
+        color="grey"
+        floated="right"
+        icon="erase"
+        onClick={(_) => setEventFeed([[], new Set()])}
+      />
+      <div style={{ clear: "both" }}>
+        <Label basic color="teal">
+          Block number maybe off by 1
+        </Label>
+      </div>
       <Feed
         style={{ clear: "both", overflow: "auto", maxHeight: feedMaxHeight }}
         events={eventFeed[0]}
       />
-    </Grid.Column>
+    </Segment>
   );
 }
 

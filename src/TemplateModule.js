@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Grid, Card, Statistic } from "semantic-ui-react";
+import {
+  Form,
+  Header,
+  Input,
+  Segment,
+  Card,
+  Statistic,
+} from "semantic-ui-react";
 
 import { useSubstrateState } from "./substrate-lib";
 import { TxButton } from "./substrate-lib/components";
@@ -36,8 +43,8 @@ function Main(props) {
   }, [api.query.templateModule]);
 
   return (
-    <Grid.Column width={8}>
-      <h1>Template Module</h1>
+    <Segment style={{ overflowWrap: "break-word", overflowX: "auto" }}>
+      <Header size="large">Template Module</Header>
       <Card centered>
         <Card.Content textAlign="center">
           <Statistic label="Current Value" value={currentValue} />
@@ -67,7 +74,7 @@ function Main(props) {
         </Form.Field>
         <div style={{ overflowWrap: "break-word" }}>{status}</div>
       </Form>
-    </Grid.Column>
+    </Segment>
   );
 }
 

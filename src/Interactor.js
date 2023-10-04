@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Form, Dropdown, Input, Label } from "semantic-ui-react";
+import {
+  Segment,
+  Header,
+  Form,
+  Dropdown,
+  Input,
+  Label,
+} from "semantic-ui-react";
 
 import { useSubstrateState } from "./substrate-lib";
 import { TxButton, TxGroupButton } from "./substrate-lib/components";
@@ -161,8 +168,8 @@ function Main(props) {
       : "Leaving this field as blank will submit a NONE value";
 
   return (
-    <Grid.Column width={8}>
-      <h1>Pallet Interactor</h1>
+    <Segment style={{ overflowWrap: "break-word", overflowX: "auto" }}>
+      <Header size="large">Pallet Interactor</Header>
       <Form>
         <Form.Group style={{ overflowX: "auto" }} inline>
           <label>Interaction Type</label>
@@ -256,7 +263,7 @@ function Main(props) {
         </Form.Field>
         <div style={{ overflowWrap: "break-word" }}>{status}</div>
       </Form>
-    </Grid.Column>
+    </Segment>
   );
 }
 

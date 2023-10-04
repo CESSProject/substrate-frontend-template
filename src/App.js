@@ -19,8 +19,8 @@ import Events from "./Events";
 import Interactor from "./Interactor";
 import Metadata from "./Metadata";
 import NodeInfo from "./NodeInfo";
-import TemplateModule from "./TemplateModule";
 import Transfer from "./Transfer";
+import TemplateModule from "./TemplateModule";
 import Upgrade from "./Upgrade";
 
 function Main() {
@@ -70,18 +70,30 @@ function Main() {
             <BlockNumber finalized />
           </Grid.Row>
           <Grid.Row stretched>
-            <Balances />
+            <Grid.Column>
+              <Balances />
+            </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Transfer />
-            <Upgrade />
+          <Grid.Row stretched>
+            <Grid.Column width={8}>
+              <Transfer />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Upgrade />
+            </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Interactor />
-            <Events />
+          <Grid.Row stretched>
+            <Grid.Column width={8}>
+              <Interactor />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Events />
+            </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <TemplateModule />
+          <Grid.Row stretched>
+            <Grid.Column width={8}>
+              <TemplateModule />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
